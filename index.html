@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Porta One</title>
+</head>
+<body>
+	<style>
+		.container{
+			width: 300px;
+			margin: 20px auto;
+		}
+		label{
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 10px;
+		}
+
+	</style>
+
+<input type="file" id="file_text">
+<button id="myBtn">Загрузить</button>
+<button id="res" type="button" disabled>Рассчитать</button>
+<div class="container">
+	<label for="">
+		<span>Максимальное число</span>
+		<input type="text" id="max" disabled>
+	</label>
+	<label for="">
+		<span>Минимальное число</span>
+		<input type="text" id="min" disabled>
+	</label>
+	<label for="">
+		<span>Медиана</span>
+		<input type="text" id="median" disabled>
+	</label>
+	<label for="">
+		<span>Cреднее арифметическое</span>
+		<input type="text" id="average" disabled>
+	</label>
+</div>
+
+	<script
+  	src="https://code.jquery.com/jquery-3.4.1.min.js"
+  	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  	crossorigin="anonymous"></script>
+	<script>
+		if (window.File && window.FileReader && window.FileList && window.Blob) {
+		  // Great success! All the File APIs are supported.
+		} else {
+		  alert('The File APIs are not fully supported in this browser.');
+		}
+
+		$('#file_text').change(function() {
+			$('#res').attr('disabled',true);
+		});
+		document.getElementById("myBtn").addEventListener("click", function() {
+
+		  var reader = new FileReader();
+		  reader.addEventListener('load', function() {
+		    arr = this.result.split('\n');
+		    $('#res').attr('disabled',false);
+		   
+		  });
+		  reader.readAsText($('#file_text').get(0).files[0])
+
+		});
+		$('#res').click(function(){
+			let max_in = $("#max"),
+				min_in = $("#min"),
+				median_in = $('#median'),
+				average_in = $('#average');
+			array = numb_arr(arr);
+			max_in.val(array[0][array[0].length-1]);
+			min_in.val(array[0][0]);
+			median_in.val(media_f(array[0]));
+			average_in.val(array[1]);
+		})
+
+	 	function numb_arr(event){
+	 		let i ,
+	 		average =0,
+	 		arr = [];
+	    	for(i = 0; i < event.length; i++){
+	    		if(event[i] !=='' && event[i] !=='\n' && event[i] !==' ' ) arr.push(Number(event[i]))
+	    		average = average + Number(event[i]);
+	    	}
+	    	return [arr.sort(function(a,b){return a - b}), average/event.length]
+	    }
+	    function media_f(arr){
+	    	let count = arr.length;
+	    	if(count%2 !== 0) return arr[Math.trunc((count/2))]
+	    	else return (arr[(count/2)-1] + arr[(count/2)+1])/2
+	    }
+	   
+	</script>
+	
+</body>
+</html>
